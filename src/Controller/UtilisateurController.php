@@ -20,7 +20,7 @@ class UtilisateurController extends AbstractController
         $this->userRepo = $userRepo;
     }
 
-    #[Route('/user', name: 'app_utilisateur', methods: ["GET"])]
+    #[Route('api/user', name: 'app_utilisateur', methods: ["GET"])]
     public function index(Request $request): JsonResponse
     {
 
