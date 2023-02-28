@@ -2,7 +2,6 @@
 
 namespace App\EventListener;
 
-// src/App/EventListener/AuthenticationSuccessListener.php
 use Symfony\Component\Security\Core\User\UserInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 
