@@ -26,14 +26,13 @@ class UtilisateurController extends AbstractController
 
         // get data request
         $request_data = json_decode($request->getContent(), true);
-
         $user = new Utilisateur();
 
         // check if username exist
         $verifUsername = $this->userRepo->findOneByUsername($request_data["username"]);
         if ($verifUsername != null) {
             return $this->json([
-                'status' => 500,
+                'code' => 401,
                 'message' => "Ce username d'utilisateur est déjà utilisé."
             ]);
         }
@@ -42,6 +41,7 @@ class UtilisateurController extends AbstractController
         // hash the password (based on the security.yaml config for the $user class)
         $hashedPassword = $this->passwordHasher->hashPassword($user, $request_data["password"]);
         $user->setPassword($hashedPassword);
+        // save user
         $this->userRepo->save($user, true);
 
         return $this->json($user->data());

@@ -162,7 +162,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function data() : array {
         return [
-            "status" => 200,
+            "code" => 200,
             "id" => $this->id,
             "username" => $this->username,
             "createdAt" => $this->createdAt->format('Y-m-d'),
