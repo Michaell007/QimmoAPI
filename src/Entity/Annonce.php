@@ -3,8 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\AnnonceRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: AnnonceRepository::class)]
 class Annonce
 {
@@ -39,6 +43,36 @@ class Annonce
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $linkUrl = null;
+
+    #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: Image::class)]
+    private Collection $images;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTime $createdAt = null;
+
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTime $updatedAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'annonces')]
+    private ?TypeAnnonce $typeAnnonce = null;
+
+    /**
+     * Function type HasLifecycleCallbacks - PrePersist
+     * Operations effectuees avant le save bd
+     */
+    #[ORM\PrePersist]
+    public function prePersistDate() {
+        
+        if ($this->createdAt == null) {
+            $this->createdAt = new \DateTime();
+        }
+        $this->updatedAt = new \DateTime();
+    }
+
+    public function __construct()
+    {
+        $this->images = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -149,6 +183,72 @@ class Annonce
     public function setLinkUrl(?string $linkUrl): self
     {
         $this->linkUrl = $linkUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Image>
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(Image $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images->add($image);
+            $image->setAnnonce($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Image $image): self
+    {
+        if ($this->images->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getAnnonce() === $this) {
+                $image->setAnnonce(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getTypeAnnonce(): ?TypeAnnonce
+    {
+        return $this->typeAnnonce;
+    }
+
+    public function setTypeAnnonce(?TypeAnnonce $typeAnnonce): self
+    {
+        $this->typeAnnonce = $typeAnnonce;
 
         return $this;
     }
