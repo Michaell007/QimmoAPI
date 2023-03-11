@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\ImageRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ImageRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
@@ -16,6 +17,7 @@ class Image
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['show_annonce'])]
     private ?string $url = null;
 
     #[ORM\Column(length: 255, nullable: true)]

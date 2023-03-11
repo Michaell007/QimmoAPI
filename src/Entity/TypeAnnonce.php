@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\TypeAnnonceRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\TypeAnnonceRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: TypeAnnonceRepository::class)]
@@ -18,6 +19,7 @@ class TypeAnnonce
     private ?int $id = null;
 
     #[ORM\Column(length: 150)]
+    #[Groups(['show_annonce'])]
     private ?string $libelle = null;
 
     #[ORM\Column(length: 200, nullable: true)]

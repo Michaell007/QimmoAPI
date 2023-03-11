@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\AnnonceRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\AnnonceRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: AnnonceRepository::class)]
@@ -15,45 +16,58 @@ class Annonce
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['show_annonce'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['show_annonce'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 155)]
+    #[Groups(['show_annonce'])]
     private ?string $Etiquette = null;
 
     #[ORM\Column]
+    #[Groups(['show_annonce'])]
     private ?int $montant = null;
 
     #[ORM\Column(length: 100)]
+    #[Groups(['show_annonce'])]
     private ?string $lieu = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['show_annonce'])]
     private ?int $nbLit = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['show_annonce'])]
     private ?int $nbDouche = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['show_annonce'])]
     private ?int $dimension = null;
 
     #[ORM\Column]
+    #[Groups(['show_annonce'])]
     private ?bool $isForOwnerSite = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['show_annonce'])]
     private ?string $linkUrl = null;
 
     #[ORM\OneToMany(mappedBy: 'annonce', targetEntity: Image::class)]
+    #[Groups(['show_annonce'])]
     private Collection $images;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
+    #[Groups(['show_annonce'])]
     private ?\DateTime $createdAt = null;
 
     #[ORM\Column(type: 'datetime')]
     private ?\DateTime $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'annonces')]
+    #[Groups(['show_annonce'])]
     private ?TypeAnnonce $typeAnnonce = null;
 
     /**
