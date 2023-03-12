@@ -53,20 +53,46 @@ class AnnonceRepository extends ServiceEntityRepository
     public function findBySearch(array $criteria, int $currentPage = 1)
     {
 
+        $limit = 9;
         $query = $this->createQueryBuilder('a')
-            ->andWhere('a.title LIKE :keyword')
-            ->andWhere('a.montant <= :montant')
-            ->andWhere('a.lieu <= :lieu')
-            ->andWhere('a.nbLit <= :nbLit')
-            ->andWhere('a.nbDouche <= :douche')
-            ->andWhere('a.dimension <= :surface')
-            ->setParameter('keyword', '%' . $criteria['keyword'] . '%')
+            ->join('a.typeAnnonce', 't')
+            ->orWhere('a.title LIKE :keyword')
+            ->orWhere('a.montant <= :montant')
+            ->orWhere('a.lieu = :lieu')
+            ->orWhere('a.nbLit <= :nbLit')
+            ->orWhere('a.nbDouche <= :douche')
+            ->orWhere('a.dimension <= :surface')
+            ->orWhere('t.libelle = :libelle')
+            ->setParameter('keyword', '%'.$criteria['keyword'].'%')
             ->setParameter('montant', $criteria['price'])
             ->setParameter('lieu', $criteria['localite'])
             ->setParameter('nbLit', $criteria['chambre'])
             ->setParameter('douche', $criteria['douche'])
             ->setParameter('surface', $criteria['surface'])
+            ->setParameter('libelle', $criteria['type'])
             ->orderBy('a.id', 'DESC')
+            ->setFirstResult($limit * ($currentPage-1)) // Offset
+            ->getQuery();
+
+        $paginator = $this->paginate($query, $currentPage);
+        return $paginator;
+    }
+
+    /**
+     * 1. Create & pass query to paginate method
+     * 2. Paginate will return a `\Doctrine\ORM\Tools\Pagination\Paginator` object
+     * 3. Return that object to the controller
+     *
+     * @param integer $currentPage The current page (passed from controller)
+     *
+     * @return \Doctrine\ORM\Tools\Pagination\Paginator
+     */
+    public function getAllAnnoncesPaginator(int $currentPage = 1)
+    {
+        $limit = 9;
+        $query = $this->createQueryBuilder('a')
+            ->orderBy('a.id', 'DESC')
+            ->setFirstResult($limit * ($currentPage-1)) // Offset
             ->getQuery();
 
         $paginator = $this->paginate($query, $currentPage);
@@ -90,12 +116,11 @@ class AnnonceRepository extends ServiceEntityRepository
      *
      * @return \Doctrine\ORM\Tools\Pagination\Paginator
      */
-    public function paginate($dql, $page = 1, $limit = 8)
+    public function paginate($dql, $page = 1, $limit = 9)
     {
         $paginator = new Paginator($dql);
 
         $paginator->getQuery()
-            ->setFirstResult($limit * ($page - 1)) // Offset
             ->setMaxResults($limit); // Limit
 
         return $paginator;

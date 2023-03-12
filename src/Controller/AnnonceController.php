@@ -37,16 +37,46 @@ class AnnonceController extends AbstractController
      *
      * @return JsonResponse
      */
-    #[Route('/annonces/search', name: 'app_annonces_search', methods: ['POST'])]
-    public function searchAnnonce(Request $request): JsonResponse {
+    #[Route('/annonces/search/{page}', name: 'app_annonces_search', methods: ['POST'])]
+    public function searchAnnonce(int $page, Request $request): JsonResponse {
 
         // get request
         $request_data = json_decode($request->getContent(), true);
 
-        $page = 1;
-        $limit = 5;
+        $limit = 9;
         // get annonces
         $paginator = $this->repoAnnonce->findBySearch($request_data, $page);
+
+        # Count all paginator
+        $totalAnnonces = $paginator->count();
+
+        // You can also call the count methods
+        $totalAnnonceReturned = $paginator->getIterator()->count();
+
+        # ArrayIterator
+        $iterator = $paginator->getIterator();
+        $maxPages = ceil($paginator->count() / $limit);
+        $annonces = $paginator->getIterator()->getArrayCopy();
+
+        return $this->json([
+                'code' => 200,
+                'data' => $annonces,
+                'maxPages' => $maxPages
+            ], 200, [], ['groups' => 'show_annonce']
+        );
+    }
+
+    /**
+     * list all Annones
+     *
+     * @return JsonResponse
+     */
+    #[Route('/annonces/all/{page}', name: 'app_list_annonces')]
+    public function listAllAnnonces(int $page): JsonResponse {
+
+        $limit = 9;
+        // get annonces
+        $paginator = $this->repoAnnonce->getAllAnnoncesPaginator($page);
 
         # Count all paginator
         $totalAnnonces = $paginator->count();
