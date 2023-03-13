@@ -2,9 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Critere;
 use App\Entity\Utilisateur;
-use App\Repository\CritereRepository;
 use App\Repository\UtilisateurRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,22 +18,22 @@ class UtilisateurController extends AbstractController
     private $repoCritere;
     public function __construct(
         UserPasswordHasherInterface $passwordHasher, 
-        UtilisateurRepository $userRepo,
-        CritereRepository $repoCritere) {
+        UtilisateurRepository $userRepo) {
         $this->passwordHasher = $passwordHasher;
         $this->userRepo = $userRepo;
-        $this->repoCritere = $repoCritere;
     }
 
     #[Route('user/create', name: 'app_utilisateur', methods: ["POST"])]
     public function index(Request $request): JsonResponse
     {
 
+        // $this->denyAccessUnlessGranted('ROLE_COMMENT_ADMIN');
+
         // get data request
         $request_data = json_decode($request->getContent(), true);
 
         // save user and check if username exist
-        $souscripteur = new Utilisateur();
+        $user = new Utilisateur();
         $verifUsername = $this->userRepo->findOneByUsername($request_data["email"]);
         if ($verifUsername != null) {
             return $this->json([
@@ -44,25 +42,17 @@ class UtilisateurController extends AbstractController
             ]);
         }
 
-        // hash the password (based on the security.yaml config for the $souscripteur class)
-        $hashedPassword = $this->passwordHasher->hashPassword($souscripteur, $request_data["password"]);
-        $souscripteur->setPassword($hashedPassword);
-        $souscripteur->setUsername($request_data["email"]);
-        $souscripteur->setNom($request_data["nom"]);
-        $souscripteur->setPrenom($request_data["prenom"]);
-        $souscripteur->setEmail($request_data["email"]);
+        // hash the password (based on the security.yaml config for the $user class)
+        $hashedPassword = $this->passwordHasher->hashPassword($user, $request_data["password"]);
+        $user->setPassword($hashedPassword);
+        $user->setUsername($request_data["email"]);
+        $user->setNom($request_data["nom"]);
+        $user->setPrenom($request_data["prenom"]);
+        $user->setEmail($request_data["email"]);
+        $user->setRoles( array('ROLE_PUBLISHER') );
 
-        // save critere
-        // $critere = new Critere();
-        // $critere->setType($request_data["type"]);
-        // $critere->setPrice($request_data["price"]);
-        // $critere->setSurface($request_data["surface"]);
-        // $critere->setChambre($request_data["chambre"]);
-        // $critere->setDouche($request_data["douche"]);
-        // $this->repoCritere->save($critere, true);
-
-        // save souscripteur
-        $this->userRepo->save($souscripteur, true);
+        // save user
+        $this->userRepo->save($user, true);
 
         return $this->json([
                 'code' => 200,
