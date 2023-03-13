@@ -71,7 +71,7 @@ class AnnonceController extends AbstractController
      *
      * @return JsonResponse
      */
-    #[Route('/annonces/all/{page}', name: 'app_list_annonces')]
+    #[Route('/annonces/all/{page}', name: 'app_list_annonces', methods: ['GET'])]
     public function listAllAnnonces(int $page): JsonResponse {
 
         $limit = 9;

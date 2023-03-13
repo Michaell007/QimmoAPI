@@ -36,6 +36,15 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'datetime')]
     private ?\DateTime $updatedAt = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $email = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $nom = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $prenom = null;
+
     public function getId(): ?Uuid
     {
         return $this->id;
@@ -157,16 +166,40 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * return user data
-     */
-    public function data() : array {
-        return [
-            "code" => 200,
-            "id" => $this->id,
-            "username" => $this->username,
-            "createdAt" => $this->createdAt->format('Y-m-d'),
-            "updatedAt" => $this->updatedAt->format('Y-m-d'),
-        ];
+    public function getEmail(): ?string
+    {
+        return $this->email;
     }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(?string $nom): self
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
+
+    public function setPrenom(?string $prenom): self
+    {
+        $this->prenom = $prenom;
+
+        return $this;
+    }
+
 }
