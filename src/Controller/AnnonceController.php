@@ -137,7 +137,7 @@ class AnnonceController extends AbstractController
      * Add Annones
      * @return JsonResponse
      */
-    #[Route('/annonce/create', name: 'app_add_annonce', methods: ['POST'])]
+    #[Route('api/annonce/create', name: 'app_add_annonce', methods: ['POST'])]
     public function addAnnonce(Request $request): JsonResponse {
         // header("Access-Control-Allow-Origin: *");
 
