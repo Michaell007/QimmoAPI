@@ -45,7 +45,6 @@ class SouscripteurController extends AbstractController
         $souscripteur->setDouche($request_data["douche"]);
         $this->souscripteurRepo->save($souscripteur, true);
 
-
         return $this->json(
             [
                 'code' => 200,
@@ -53,4 +52,5 @@ class SouscripteurController extends AbstractController
             ], 200, []
         );
     }
+    
 }

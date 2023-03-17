@@ -70,6 +70,14 @@ class Annonce
     #[Groups(['show_annonce'])]
     private ?TypeAnnonce $typeAnnonce = null;
 
+    #[Groups(['show_annonce'])]
+    #[ORM\ManyToOne(inversedBy: 'annonces')]
+    private ?Utilisateur $annonceur = null;
+
+    #[Groups(['show_annonce'])]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
     /**
      * Function type HasLifecycleCallbacks - PrePersist
      * Operations effectuees avant le save bd
@@ -263,6 +271,30 @@ class Annonce
     public function setTypeAnnonce(?TypeAnnonce $typeAnnonce): self
     {
         $this->typeAnnonce = $typeAnnonce;
+
+        return $this;
+    }
+
+    public function getAnnonceur(): ?Utilisateur
+    {
+        return $this->annonceur;
+    }
+
+    public function setAnnonceur(?Utilisateur $annonceur): self
+    {
+        $this->annonceur = $annonceur;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }

@@ -2,9 +2,12 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UtilisateurRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
@@ -12,15 +15,18 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 #[ORM\HasLifecycleCallbacks]
 class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    #[Groups(['show_user', 'show_annonce'])]
     #[ORM\Id]
     #[ORM\GeneratedValue('CUSTOM')]
     #[ORM\Column(type: 'uuid', unique: true)]
     #[ORM\CustomIdGenerator('doctrine.uuid_generator')]
     private $id = null;
 
+    #[Groups(['show_user', 'show_annonce'])]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $username = null;
 
+    #[Groups(['show_user'])]
     #[ORM\Column]
     private array $roles = [];
 
@@ -36,17 +42,32 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'datetime')]
     private ?\DateTime $updatedAt = null;
 
+    #[Groups(['show_user', 'show_annonce'])]
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
+    #[Groups(['show_user', 'show_annonce'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nom = null;
 
+    #[Groups(['show_user', 'show_annonce'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $prenom = null;
 
     #[ORM\Column(options: ["default" => false ] )]
     private ?bool $isActive = false;
+
+    #[ORM\OneToMany(mappedBy: 'annonceur', targetEntity: Annonce::class)]
+    private Collection $annonces;
+
+    #[Groups(['show_user', 'show_annonce'])]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $contact = null;
+
+    public function __construct()
+    {
+        $this->annonces = new ArrayCollection();
+    }
 
     public function getId(): ?Uuid
     {
@@ -213,6 +234,48 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsActive(bool $isActive): self
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Annonce>
+     */
+    public function getAnnonces(): Collection
+    {
+        return $this->annonces;
+    }
+
+    public function addAnnonce(Annonce $annonce): self
+    {
+        if (!$this->annonces->contains($annonce)) {
+            $this->annonces->add($annonce);
+            $annonce->setAnnonceur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnnonce(Annonce $annonce): self
+    {
+        if ($this->annonces->removeElement($annonce)) {
+            // set the owning side to null (unless already changed)
+            if ($annonce->getAnnonceur() === $this) {
+                $annonce->setAnnonceur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getContact(): ?string
+    {
+        return $this->contact;
+    }
+
+    public function setContact(?string $contact): self
+    {
+        $this->contact = $contact;
 
         return $this;
     }

@@ -25,6 +25,7 @@ class AuthenticationSuccessListener {
             'nom' => $user->getNom(),
             'prenom' => $user->getPrenom(),
             'isActive' => $user->isIsActive(),
+            'email' => $user->getEmail(),
         );
 
         $event->setData($data);
