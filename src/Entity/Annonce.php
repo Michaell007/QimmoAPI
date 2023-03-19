@@ -75,7 +75,7 @@ class Annonce
     private ?Utilisateur $annonceur = null;
 
     #[Groups(['show_annonce'])]
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
     /**

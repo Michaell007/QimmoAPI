@@ -19,7 +19,7 @@ class SouscripteurController extends AbstractController
     }
 
     #[Route('/souscripteur/create', name: 'app_souscripteur', methods: ["POST"])]
-    public function index(Request $request): JsonResponse
+    public function indexSouscripteur(Request $request): JsonResponse
     {
 
         // get data request

@@ -27,7 +27,7 @@ class UtilisateurController extends AbstractController
     }
 
     #[Route('user/create', name: 'app_utilisateur', methods: ["POST"])]
-    public function index(Request $request): JsonResponse
+    public function indexUser(Request $request): JsonResponse
     {
 
         // $this->denyAccessUnlessGranted('ROLE_COMMENT_ADMIN');

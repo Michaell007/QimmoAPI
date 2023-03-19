@@ -39,10 +39,9 @@ class AnnonceController extends AbstractController
     /**
      * Retourne les 12 dernieres Annonces
      *
-     * @return JsonResponse
      */
-    #[Route('/annonce/latest', name: 'app_annonce', methods: ['GET'])]
-    public function index(): JsonResponse {
+    #[Route('/annonce/all/latest', name: 'app_annonce_latest', methods: ['GET'])]
+    public function index() {
 
         $annonces = $this->repoAnnonce->findBy([],  ['createdAt' => 'DESC'], 12);
         return $this->json([
