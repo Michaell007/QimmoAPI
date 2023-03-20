@@ -1,0 +1,11 @@
+twig:
+    default_path: '%kernel.project_dir%/templates'
+    globals:
+        DOMAIN_FRONTEND: '%env(DOMAIN_FRONTEND)%'
+    paths:
+        # point this wherever your images live
+        '%kernel.project_dir%/public/assets/img': images
+
+when@test:
+    twig:
+        strict_variables: true

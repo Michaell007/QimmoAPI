@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Annonce;
+use App\Entity\Souscripteur;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -38,6 +39,34 @@ class AnnonceRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * Renvoie la liste des Ads correcpondants aux recherches souscripteurs
+     */
+    public function findAnnonceBySouscripteurCriteres(Souscripteur $souscripteur)
+    {
+
+        $query = $this->createQueryBuilder('a')
+            ->join('a.typeAnnonce', 't')
+            ->andWhere('t.libelle = :libelle')
+            ->andWhere('a.montant BETWEEN :montReduce AND :montant')
+            ->andWhere("a.nbLit IN(:tabLits)")
+            ->andWhere("a.nbDouche IN(:tabDouche)")
+            ->orWhere('a.dimension BETWEEN :surfReduce AND :surface')
+            ->setParameter('libelle', $souscripteur->getType())
+            ->setParameter('montReduce', $souscripteur->getPrice()-50000)
+            ->setParameter('montant', $souscripteur->getPrice())
+            ->setParameter('tabLits', array_values([$souscripteur->getChambre(), $souscripteur->getChambre()-1, null]) )
+            ->setParameter('tabDouche', array_values([$souscripteur->getDouche(), $souscripteur->getDouche()-1, null]) )
+            ->setParameter('surfReduce', $souscripteur->getSurface()-10)
+            ->setParameter('surface', $souscripteur->getSurface())
+            ->orderBy('a.id', 'DESC')
+            ->setMaxResults(3)
+            ->getQuery()
+            ->getResult();
+
+        return $query;
     }
 
 

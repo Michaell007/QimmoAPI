@@ -5,37 +5,47 @@ namespace App\Entity;
 use App\Repository\SouscripteurRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: SouscripteurRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Souscripteur
 {
+    #[Groups(['show_souscripteur'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(['show_souscripteur'])]
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $nom = null;
 
+    #[Groups(['show_souscripteur'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $prenom = null;
 
+    #[Groups(['show_souscripteur'])]
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
+    #[Groups(['show_souscripteur'])]
     #[ORM\Column(length: 100)]
     private ?string $type = null;
 
+    #[Groups(['show_souscripteur'])]
     #[ORM\Column]
     private ?int $price = null;
 
+    #[Groups(['show_souscripteur'])]
     #[ORM\Column]
     private ?int $surface = null;
 
+    #[Groups(['show_souscripteur'])]
     #[ORM\Column]
     private ?int $douche = null;
 
+    #[Groups(['show_souscripteur'])]
     #[ORM\Column]
     private ?int $chambre = null;
 

@@ -52,5 +52,20 @@ class SouscripteurController extends AbstractController
             ], 200, []
         );
     }
+
+    /**
+     * Get all souscripteur
+     *
+     */
+    #[Route('/souscripteur/all', name: 'app_souscripteur_all', methods: ['GET'])]
+    public function index() {
+
+        $souscripteurs = $this->souscripteurRepo->findAll();
+        return $this->json([
+                'code' => 200,
+                'data' => $souscripteurs
+            ], 200, [], ['groups' => 'show_souscripteur']
+        );
+    }
     
 }
