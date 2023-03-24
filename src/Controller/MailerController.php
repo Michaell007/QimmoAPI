@@ -16,26 +16,9 @@ class MailerController extends AbstractController
 {
 
     #[Route('/mailer', name: 'app_mailer')]
-    public function index(MailerInterface $mailer, EmailService $envoieMail)
+    public function autoSend(MailerInterface $mailer, EmailService $envoieMail)
     {
-
         $envoieMail->sender();
-
-        // $email = (new TemplatedEmail())
-        //     ->from( new Address('michaelakichi@gmail.com', 'Qimmo Immobilier') )
-        //     ->to(new Address('michaelakichi@gmail.com'))
-        //     ->subject('Nouvelle notification !')
-        //     // path of the Twig template to render
-        //     ->htmlTemplate('emails/notifications.html.twig')
-        //     // pass variables (name => value) to the template
-        //     ->context([
-        //         'expiration_date' => new \DateTime('+7 days'),
-        //         'username' => 'foo',
-        //     ])
-        // ;
-        // // send email
-        // $mailer->send($email);
-
         return new Response();
     }
 }
